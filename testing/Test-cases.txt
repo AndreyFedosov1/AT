@@ -1,4 +1,4 @@
-﻿https://sales.orenairport.ru/oxygen/
+﻿Сайт: https://sales.orenairport.ru/oxygen/
 
 1. Возможность заказать билет из Минска в Москву
 	Пишем "Minsk" в поле FROM
