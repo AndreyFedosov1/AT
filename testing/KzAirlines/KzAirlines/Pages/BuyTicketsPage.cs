@@ -69,8 +69,16 @@ namespace KzAirlines.Pages
             }
             catch (Exception)
             {
-                var pageWarningBlock = _driver.FindElement(By.XPath("//div[@class='alert alert-warning page-warning']"));
-                return !pageWarningBlock.Displayed;
+                try
+                {
+                    var pageWarningBlock = _driver.FindElement(By.XPath("//div[@class='alert alert-warning page-warning']"));
+                    return !pageWarningBlock.Displayed;
+                }
+                catch (Exception)
+                {
+                    var pageDangerBlock = _driver.FindElement(By.XPath("//div[@class='alert alert-danger page-error']"));
+                    return !pageDangerBlock.Displayed;
+                }
             }
         }
 
