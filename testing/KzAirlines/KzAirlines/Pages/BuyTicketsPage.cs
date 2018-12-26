@@ -1,0 +1,116 @@
+﻿using OpenQA.Selenium;
+using System;
+using System.Linq;
+
+namespace KzAirlines.Pages
+{
+    public class BuyTicketsPage
+    {
+        private const string BASE_URL = "https://sales.orenairport.ru/oxygen/";
+        private readonly IWebDriver _driver;
+
+        public BuyTicketsPage(IWebDriver driver)
+        {
+            _driver = driver;
+        }
+
+        public void Open()
+        {
+            _driver.Navigate().GoToUrl(BASE_URL);
+        }
+
+        public void InitFrom(string from)
+        {
+            var inputFrom = _driver.FindElements(By.ClassName("view-block")).First();
+            var cityBlockFrom = _driver.FindElements(By.XPath("//ul[@class='city-list']")).First();
+
+            var input = _driver.FindElement(By.Id("originCityName_0"));
+            inputFrom.Click();
+            input.SendKeys(from);
+
+            if (cityBlockFrom.Displayed)
+                cityBlockFrom.FindElement(By.TagName("li")).Click();
+        }
+
+        public void InitTo(string to)
+        {
+            var inputTo = _driver.FindElements(By.ClassName("view-block")).Last();
+            var cityBlockTo = _driver.FindElements(By.XPath("//ul[@class='city-list']")).Last();
+
+            var input = _driver.FindElement(By.Id("destinationCityName_0"));
+            inputTo.Click();
+            input.SendKeys(to);
+
+            if (cityBlockTo.Displayed)
+                cityBlockTo.FindElement(By.TagName("li")).Click();
+        }
+
+        public void ClickOneWay()
+        {
+            var oneWayLabel = _driver.FindElement(By.XPath("//label[@for='isOneWay']"));
+            oneWayLabel.Click();
+        }
+
+        public bool IsReturnDateVisible()
+        {
+            var backDateInput = _driver.FindElement(By.Id("backDate_0"));
+            return backDateInput.Displayed;
+        }
+
+        public bool ResultsFound()
+        {
+            var searchButton = _driver.FindElement(By.Id("searchButton"));
+            searchButton.Click();
+
+            try
+            {
+                var foundBlock = _driver.FindElement(By.Id("search-filter-info"));
+                return foundBlock.Displayed;
+            }
+            catch (Exception)
+            {
+                var pageWarningBlock = _driver.FindElement(By.XPath("//div[@class='alert alert-warning page-warning']"));
+                return !pageWarningBlock.Displayed;
+            }
+        }
+
+        public void ClickLoginButton()
+        {
+            try
+            {
+                var loginButton = _driver.FindElement(By.Id("showLoginBtn"));
+                loginButton.Click();
+            }
+            catch (Exception)
+            {
+                var loginButton = _driver.FindElement(By.Id("loginBtn"));
+                loginButton.Click();
+            }
+        }
+
+        public void ClickLogoutButton()
+        {
+            var logoutButton = _driver.FindElement(By.Id("logoutBtn"));
+            logoutButton.Click();
+        }
+
+        public void EnterLogin(string login)
+        {
+            var loginEntry = _driver.FindElement(By.Id("login"));
+            loginEntry.Click();
+            loginEntry.SendKeys(login);
+        }
+
+        public void EnterPassword(string password)
+        {
+            var passEntry = _driver.FindElement(By.Id("password"));
+            passEntry.Click();
+            passEntry.SendKeys(password);
+        }
+
+        public string UserName => _driver.FindElement(By.Id("userName")).Text;
+
+        public bool Authorized => _driver.FindElement(By.Id("authorise")).Displayed;
+
+    }
+}
